@@ -9,7 +9,7 @@ import UIKit
 
 protocol FavoritesViewOutput: AnyObject {
     func getFavoritesCount() -> Int
-    func getFavorite(at index: Int) -> Favorite
+    func getFavorite(at index: Int) -> FavoriteImageModel
     func removeFavorite(at index: Int)
     func addToFavorites(_ image: UIImage, query: String)
 }
@@ -17,27 +17,27 @@ protocol FavoritesViewOutput: AnyObject {
 class FavoritesPresenter: FavoritesViewOutput {
     
     weak var view: FavoritesViewInput?
-    private let favoriteManager: StorageManager
+    private let storageManager: StorageManager
     private let favoritesLimit = 10
     
-    init(favoriteManager: StorageManager) {
-        self.favoriteManager = favoriteManager
+    init(storageManager: StorageManager) {
+        self.storageManager = storageManager
     }
     
     func getFavoritesCount() -> Int {
-        return favoriteManager.getFavoriteImages().count
+        return storageManager.getFavoriteImages().count
     }
     
-    func getFavorite(at index: Int) -> Favorite {
-        let favorites = favoriteManager.getFavoriteImages()
+    func getFavorite(at index: Int) -> FavoriteImageModel {
+        let favorites = storageManager.getFavoriteImages()
         return favorites[index]
     }
     
     func addToFavorites(_ image: UIImage, query: String) {
-        favoriteManager.saveImage(image, query: query)
+        storageManager.saveImage(image, query: query)
     }
     
     func removeFavorite(at index: Int) {
-        favoriteManager.removeFavorite(at: index)
+        storageManager.removeFavorite(at: index)
     }
 }

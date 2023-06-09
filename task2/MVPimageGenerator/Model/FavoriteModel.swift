@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Favorite: NSObject, NSCoding {
+class FavoriteImageModel: NSObject, NSCoding {
     let image: UIImage
     let query: String
     var timestamp: Date

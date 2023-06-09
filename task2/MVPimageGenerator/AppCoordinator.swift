@@ -9,8 +9,8 @@ import UIKit
 
 final class AppCoordinator {
     
-    private let imageService = NetworkService()
-    private let favoriteManager = StorageManager()
+    private let networkService = NetworkService()
+    private let storageManager = StorageManager()
     
     public func create() -> UITabBarController {
         
@@ -19,9 +19,9 @@ final class AppCoordinator {
         let transformer = ImageDataTransformer()
         
         ValueTransformer.setValueTransformer(transformer, forName: NSValueTransformerName(rawValue: "ImageDataTransformer"))
-        let mainPresenter = MainPresenter(imageService: imageService, favoriteManager: favoriteManager)
+        let mainPresenter = MainPresenter(networkService: networkService, storageManager: storageManager)
         mainPresenter.view = mainViewController
-        let favoritesPresenter = FavoritesPresenter(favoriteManager: favoriteManager)
+        let favoritesPresenter = FavoritesPresenter(storageManager: storageManager)
         favoritesPresenter.view = favoritesViewController
         
         let tabBarController = UITabBarController()

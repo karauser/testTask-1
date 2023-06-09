@@ -1,5 +1,5 @@
 //
-//  FavoriteService.swift
+//  StorageManager.swift
 //  MVPimageGenerator
 //
 //  Created by Sergey on 22/05/23.
@@ -38,14 +38,14 @@ class StorageManager {
         if getFavoriteImages().count > favoriteLimit { removeOldestFavoriteImage() }
     }
     
-    func getFavoriteImages() -> [Favorite] {
+    func getFavoriteImages() -> [FavoriteImageModel] {
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
 
         do {
             let entities = try self.context.fetch(fetchRequest)
-            let data = entities.compactMap { entity -> Favorite? in
+            let data = entities.compactMap { entity -> FavoriteImageModel? in
                 if let image = entity.image, let query = entity.query, let timestamp = entity.timestamp {
-                    let favorite = Favorite(image: image, query: query, timestamp: timestamp)
+                    let favorite = FavoriteImageModel(image: image, query: query, timestamp: timestamp)
                     favorite.timestamp = entity.timestamp! // Присвоим значение из свойства dateAdded
                     return favorite
                 }

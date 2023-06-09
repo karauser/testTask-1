@@ -18,15 +18,15 @@ protocol MainViewOutput: AnyObject {
 
 class MainPresenter: MainViewOutput {
     func onViewDidLoad() {}
-    private let imageService: NetworkProtocol
-    private let favoriteManager: StorageManager
+    private let networkService: NetworkProtocol
+    private let storageManager: StorageManager
     private var addToFavoritesClosure: ((UIImage, String) -> Void)?
-    private var inputText = [String]()
+    private var requestIdentifiers: [String: (Result<UIImage, Error>) -> Void] = [:]
     weak var view: MainViewInput?
     
-    init(imageService: NetworkProtocol, favoriteManager: StorageManager) {
-        self.imageService    = imageService
-        self.favoriteManager = favoriteManager
+    init(networkService: NetworkProtocol, storageManager: StorageManager) {
+        self.networkService  = networkService
+        self.storageManager = storageManager
     }
     
     func generateButtonTapped() {
@@ -39,13 +39,11 @@ class MainPresenter: MainViewOutput {
     }
     
     func generateImage(with query: String) {
-        guard !inputText.contains(query) else { return }
-        imageService.generateImage(with: query) { [weak self] result in
+        networkService.generateImage(with: query) { [weak self] result in
             switch result {
             case .success(let image):
                 DispatchQueue.main.async {
                     self?.view?.showGeneratedImage(image)
-                    self?.inputText.append(query)
                     self?.view?.updateFavoriteButtonState()
                 }
             case .failure(let error):
@@ -58,7 +56,7 @@ class MainPresenter: MainViewOutput {
     
     func addToFavorites() {
         if let image = view?.getGeneratedImage(), let query = view?.getQueryText() {
-            favoriteManager.saveImage(image, query: query)
+            storageManager.saveImage(image, query: query)
             view?.imageSavedToFavorites()
         }
     }

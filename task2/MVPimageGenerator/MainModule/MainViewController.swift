@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewInput.swift
 //  MVPimageGenerator
 //
 //  Created by Sergey on 21/05/23.
